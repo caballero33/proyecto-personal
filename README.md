@@ -1,4 +1,4 @@
-# 🩺 TriageDoc - Sistema Experto de Triage y Orientación Médica Preliminar
+# TriageDoc - Sistema Experto de Triage y Orientación Médica Preliminar
 
 > **Materia:** IS-912 Sistemas Expertos (Programación Web)  
 > **Arquitectura:** Monorepo con Clean Architecture (API-First), Docker y Principios SOLID  
@@ -6,13 +6,13 @@
 
 ---
 
-## 📌 1. Descripción del Proyecto
+## 1. Descripción del Proyecto
 
-**TriageDoc** es un sistema inteligente de clasificación de urgencias médicas (Triage) y orientación preliminar para pacientes. Basado en el estándar de clasificación de Manchester y reglas de inferencia clínica, el sistema analiza síntomas críticos, signos de alarma y antecedentes para recomendar de forma rápida el nivel de prioridad de atención (desde código azul/verde para casos leves hasta código naranja/rojo para emergencias vitales).
+**TriageDoc** es un sistema de clasificación de urgencias médicas (Triage) y orientación preliminar para pacientes. Basado en el estándar de clasificación de Manchester y reglas de inferencia clínica, el sistema analiza síntomas críticos, signos de alarma y antecedentes para determinar de forma rápida el nivel de prioridad de atención (desde código azul/verde para casos leves hasta código naranja/rojo para emergencias vitales).
 
 ---
 
-## 🏗️ 2. Arquitectura de la Solución (Clean Architecture)
+## 2. Arquitectura de la Solución (Clean Architecture)
 
 El backend sigue estrictamente la **Regla de Dependencia** de Clean Architecture:
 
@@ -48,7 +48,7 @@ graph TD
 
 ---
 
-## 🧩 3. Principios SOLID Aplicados
+## 3. Principios SOLID Aplicados
 
 * **SRP (Single Responsibility):** Cada servicio se enfoca en un único objetivo (ej. `TriageService` procesa reglas clínicas; los controladores solo gestionan HTTP).
 * **OCP (Open/Closed):** El motor de reglas está diseñado mediante interfaces para permitir nuevos algoritmos de inferencia sin alterar el flujo principal.
@@ -56,7 +56,7 @@ graph TD
 
 ---
 
-## 📋 4. Backlog Inicial de Historias de Usuario
+## 4. Backlog Inicial de Historias de Usuario
 
 * **HU-01:** Como personal de triage, quiero consultar el catálogo de síntomas para clasificar al paciente.
 * **HU-02:** Como usuario, quiero registrar mis síntomas principales y edad para recibir una evaluación preliminar.
@@ -68,7 +68,7 @@ graph TD
 
 ---
 
-## 🚀 5. Puesta en Marcha Rápida
+## 5. Puesta en Marcha Rápida
 
 ### 1. Iniciar Base de Datos con Docker
 ```bash

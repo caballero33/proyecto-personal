@@ -1,4 +1,4 @@
-# 💻 Frontend - TriageDoc
+# Frontend - TriageDoc
 
 Esta carpeta albergará la aplicación cliente en **React** que consumirá la API REST del backend siguiendo la arquitectura **API-First** vista en la **Clase 1**.
 
