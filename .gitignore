@@ -1,0 +1,32 @@
+# Build and IDE outputs
+**/bin/
+**/obj/
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# 12-Factor App: Environment Variables (Security)
+**/.env
+!**/.env.example
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
+# Docker volumes
+postgres_data/
+
+# Frontend / Node
+node_modules/
+dist/
+build/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
