@@ -1,13 +1,18 @@
+using TriageDoc.Application.Features.Evaluaciones.DTOs;
 using TriageDoc.Domain.Entities;
 
 namespace TriageDoc.Application.Interfaces;
 
 /// <summary>
-/// Contrato de Abstracción (Principio DIP - La 'D' de SOLID).
-/// Define las operaciones que expone el motor experto de triage a las capas externas.
+/// Contrato del Motor de Inferencia Experto para Triage Médico (Principio DIP - SOLID).
+/// Aplica el árbol de decisión basado en el Sistema de Clasificación Manchester.
 /// </summary>
 public interface ITriageService
 {
     string ObtenerEstadoMotor();
-    EvaluacionTriage EvaluarCasoPreliminar(string nombrePaciente, int edad, bool dolorPecho, bool dificultadRespiratoria, double temperatura);
+    
+    /// <summary>
+    /// Ejecuta las reglas de inferencia clínica para clasificar el nivel de prioridad de un paciente.
+    /// </summary>
+    EvaluacionTriage ProcesarInferencia(int pacienteId, int edadPaciente, CreateEvaluacionRequestDto dto);
 }

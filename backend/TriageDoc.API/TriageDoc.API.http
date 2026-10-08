@@ -1,0 +1,201 @@
+@baseUrl = http://localhost:5000
+# En caso de usar HTTPS con Kestrel, descomentar la siguiente línea:
+# @baseUrl = https://localhost:7001
+
+### =========================================================================
+### 1. DIAGNÓSTICO DEL MOTOR EXPERTO (CLASE 1 & 2)
+### =========================================================================
+
+### 1.1 Obtener estado y calibración del motor experto
+GET {{baseUrl}}/api/triage/estado
+Accept: application/json
+
+### =========================================================================
+### 2. TABLA 1: PACIENTES (CRUD COMPLETO - CLASE 5, 6, 8, 9)
+### =========================================================================
+
+### 2.1 Listar todos los pacientes
+GET {{baseUrl}}/api/pacientes
+Accept: application/json
+
+### 2.2 Consultar paciente por ID (ID = 1)
+GET {{baseUrl}}/api/pacientes/1
+Accept: application/json
+
+### 2.3 Consultar paciente inexistente (Debe retornar 404 Not Found)
+GET {{baseUrl}}/api/pacientes/9999
+Accept: application/json
+
+### 2.4 Registrar nuevo paciente (POST - 201 Created)
+POST {{baseUrl}}/api/pacientes
+Content-Type: application/json
+
+{
+  "dni": "0801-1990-99887",
+  "nombreCompleto": "Carlos Roberto Mendoza",
+  "edad": 38,
+  "genero": "Masculino",
+  "telefono": "+504 9555-4433"
+}
+
+### 2.5 Intentar registrar paciente con datos inválidos (Debe retornar 400 Bad Request por FluentValidation)
+POST {{baseUrl}}/api/pacientes
+Content-Type: application/json
+
+{
+  "dni": "",
+  "nombreCompleto": "A",
+  "edad": 250
+}
+
+### 2.6 Actualizar paciente existente (PUT - 204 No Content)
+PUT {{baseUrl}}/api/pacientes/1
+Content-Type: application/json
+
+{
+  "dni": "0801-1995-12345",
+  "nombreCompleto": "Juan Carlos Rodríguez Actualizado",
+  "edad": 46,
+  "genero": "Masculino",
+  "telefono": "+504 9876-0000"
+}
+
+### 2.7 Eliminar paciente (DELETE - 204 No Content)
+DELETE {{baseUrl}}/api/pacientes/3
+
+### =========================================================================
+### 3. TABLA 2: SÍNTOMAS (CRUD COMPLETO)
+### =========================================================================
+
+### 3.1 Listar catálogo completo de síntomas
+GET {{baseUrl}}/api/sintomas
+Accept: application/json
+
+### 3.2 Listar únicamente signos de alarma (Banderas Rojas)
+GET {{baseUrl}}/api/sintomas/alarmas
+Accept: application/json
+
+### 3.3 Consultar síntoma por ID (ID = 1)
+GET {{baseUrl}}/api/sintomas/1
+Accept: application/json
+
+### 3.4 Crear un nuevo síntoma
+POST {{baseUrl}}/api/sintomas
+Content-Type: application/json
+
+{
+  "codigo": "SIN-007",
+  "nombre": "Convulsiones Tónico-Clónicas Activas",
+  "descripcion": "Episodio convulsivo en curso o estado epiléptico",
+  "esSignoAlarma": true,
+  "categoria": "Neurológico",
+  "nivelGravedadBase": 5
+}
+
+### 3.5 Actualizar síntoma (PUT)
+PUT {{baseUrl}}/api/sintomas/4
+Content-Type: application/json
+
+{
+  "codigo": "SIN-004",
+  "nombre": "Fiebre Muy Elevada (> 39.0 °C)",
+  "descripcion": "Temperatura corporal superior a 39°C con diaforesis",
+  "esSignoAlarma": true,
+  "categoria": "Infeccioso",
+  "nivelGravedadBase": 4
+}
+
+### 3.6 Eliminar síntoma
+DELETE {{baseUrl}}/api/sintomas/6
+
+### =========================================================================
+### 4. TABLA 3: PROTOCOLOS DE ATENCIÓN MANCHESTER (CRUD COMPLETO)
+### =========================================================================
+
+### 4.1 Listar los 5 protocolos Manchester del hospital
+GET {{baseUrl}}/api/protocolos
+Accept: application/json
+
+### 4.2 Consultar protocolo por ID (ID = 1 - Nivel 1 Resucitación / Rojo)
+GET {{baseUrl}}/api/protocolos/1
+Accept: application/json
+
+### 4.3 Actualizar tiempo de espera o área de derivación de un protocolo
+PUT {{baseUrl}}/api/protocolos/3
+Content-Type: application/json
+
+{
+  "nivelPrioridad": 3,
+  "codigoColor": "Amarillo",
+  "nombreNivel": "Nivel 3 - Urgencia Médica",
+  "tiempoMaximoEsperaMinutos": 50,
+  "areaDerivacion": "Boxes de Atención Médica Prioritaria",
+  "accionInmediata": "Atención médica antes de 50 minutos con toma seriada de signos vitales."
+}
+
+### =========================================================================
+### 5. TABLA 4: EVALUACIONES DE TRIAGE (MOTOR EXPERTO + PERSISTENCIA)
+### =========================================================================
+
+### 5.1 Consultar todas las evaluaciones históricas
+GET {{baseUrl}}/api/evaluaciones
+Accept: application/json
+
+### 5.2 Consultar evaluación específica por ID (ID = 1)
+GET {{baseUrl}}/api/evaluaciones/1
+Accept: application/json
+
+### 5.3 Consultar historial de evaluaciones de un paciente (Paciente ID = 1)
+GET {{baseUrl}}/api/evaluaciones/paciente/1
+Accept: application/json
+
+### 5.4 EJECUTAR SISTEMA EXPERTO - Caso 1: Emergencia Vital (Infiere CÓDIGO ROJO)
+# Paciente con Dolor de Pecho + Dificultad Respiratoria y Saturación 87%
+POST {{baseUrl}}/api/evaluaciones
+Content-Type: application/json
+
+{
+  "pacienteId": 1,
+  "temperatura": 37.0,
+  "frecuenciaCardiaca": 135,
+  "presionArterial": "150/100",
+  "saturacionOxigeno": 87,
+  "dolorToracico": true,
+  "dificultadRespiratoria": true,
+  "sintomasPrincipales": "Dolor retroesternal punzante con falta de aire aguda",
+  "observacionesClinicas": "Paciente sudoroso y pálido en sala de espera"
+}
+
+### 5.5 EJECUTAR SISTEMA EXPERTO - Caso 2: Emergencia Severa (Infiere CÓDIGO NARANJA)
+# Paciente con Fiebre Crítica (39.8 °C) y taquicardia
+POST {{baseUrl}}/api/evaluaciones
+Content-Type: application/json
+
+{
+  "pacienteId": 2,
+  "temperatura": 39.8,
+  "frecuenciaCardiaca": 128,
+  "presionArterial": "130/85",
+  "saturacionOxigeno": 94,
+  "dolorToracico": false,
+  "dificultadRespiratoria": false,
+  "sintomasPrincipales": "Fiebre persistente muy alta y desorientación leve",
+  "observacionesClinicas": "Adulto mayor con deshidratación"
+}
+
+### 5.6 EJECUTAR SISTEMA EXPERTO - Caso 3: Consulta Menor (Infiere CÓDIGO VERDE / AZUL)
+# Paciente con signos vitales normales y cuadro leve
+POST {{baseUrl}}/api/evaluaciones
+Content-Type: application/json
+
+{
+  "pacienteId": 1,
+  "temperatura": 36.6,
+  "frecuenciaCardiaca": 74,
+  "presionArterial": "120/80",
+  "saturacionOxigeno": 99,
+  "dolorToracico": false,
+  "dificultadRespiratoria": false,
+  "sintomasPrincipales": "Molestia nasal y dolor de garganta leve",
+  "observacionesClinicas": "Paciente camina sin apoyo y hemodinámicamente estable"
+}
