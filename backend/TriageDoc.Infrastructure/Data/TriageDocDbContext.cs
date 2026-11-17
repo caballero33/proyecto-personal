@@ -25,11 +25,14 @@ public class TriageDocDbContext : DbContext
         {
             entity.ToTable("pacientes");
             entity.HasKey(p => p.Id);
+            entity.Property(p => p.Id).HasColumnName("id");
             entity.HasIndex(p => p.Dni).IsUnique();
-            entity.Property(p => p.Dni).IsRequired().HasMaxLength(20);
-            entity.Property(p => p.NombreCompleto).IsRequired().HasMaxLength(150);
-            entity.Property(p => p.Genero).HasMaxLength(20);
-            entity.Property(p => p.Telefono).HasMaxLength(25);
+            entity.Property(p => p.Dni).HasColumnName("dni").IsRequired().HasMaxLength(20);
+            entity.Property(p => p.NombreCompleto).HasColumnName("nombre_completo").IsRequired().HasMaxLength(150);
+            entity.Property(p => p.Edad).HasColumnName("edad");
+            entity.Property(p => p.Genero).HasColumnName("genero").HasMaxLength(20);
+            entity.Property(p => p.Telefono).HasColumnName("telefono").HasMaxLength(25);
+            entity.Property(p => p.FechaRegistro).HasColumnName("fecha_registro");
         });
 
         // 2. Configuración de Sintoma
@@ -37,11 +40,14 @@ public class TriageDocDbContext : DbContext
         {
             entity.ToTable("sintomas");
             entity.HasKey(s => s.Id);
+            entity.Property(s => s.Id).HasColumnName("id");
             entity.HasIndex(s => s.Codigo).IsUnique();
-            entity.Property(s => s.Codigo).IsRequired().HasMaxLength(20);
-            entity.Property(s => s.Nombre).IsRequired().HasMaxLength(120);
-            entity.Property(s => s.Descripcion).HasMaxLength(300);
-            entity.Property(s => s.Categoria).HasMaxLength(50);
+            entity.Property(s => s.Codigo).HasColumnName("codigo").IsRequired().HasMaxLength(20);
+            entity.Property(s => s.Nombre).HasColumnName("nombre").IsRequired().HasMaxLength(120);
+            entity.Property(s => s.Descripcion).HasColumnName("descripcion").HasMaxLength(300);
+            entity.Property(s => s.EsSignoAlarma).HasColumnName("es_signo_alarma");
+            entity.Property(s => s.Categoria).HasColumnName("categoria").HasMaxLength(50);
+            entity.Property(s => s.NivelGravedadBase).HasColumnName("nivel_gravedad_base");
         });
 
         // 3. Configuración de ProtocoloAtencion
@@ -49,10 +55,13 @@ public class TriageDocDbContext : DbContext
         {
             entity.ToTable("protocolos_atencion");
             entity.HasKey(pr => pr.Id);
-            entity.Property(pr => pr.CodigoColor).IsRequired().HasMaxLength(30);
-            entity.Property(pr => pr.NombreNivel).IsRequired().HasMaxLength(50);
-            entity.Property(pr => pr.AreaDerivacion).IsRequired().HasMaxLength(120);
-            entity.Property(pr => pr.AccionInmediata).IsRequired().HasMaxLength(300);
+            entity.Property(pr => pr.Id).HasColumnName("id");
+            entity.Property(pr => pr.NivelPrioridad).HasColumnName("nivel_prioridad");
+            entity.Property(pr => pr.CodigoColor).HasColumnName("codigo_color").IsRequired().HasMaxLength(30);
+            entity.Property(pr => pr.NombreNivel).HasColumnName("nombre_nivel").IsRequired().HasMaxLength(50);
+            entity.Property(pr => pr.TiempoMaximoEsperaMinutos).HasColumnName("tiempo_maximo_espera_minutos");
+            entity.Property(pr => pr.AreaDerivacion).HasColumnName("area_derivacion").IsRequired().HasMaxLength(120);
+            entity.Property(pr => pr.AccionInmediata).HasColumnName("accion_inmediata").IsRequired().HasMaxLength(300);
         });
 
         // 4. Configuración de EvaluacionTriage (Relación con Paciente y Protocolo)
@@ -60,9 +69,21 @@ public class TriageDocDbContext : DbContext
         {
             entity.ToTable("evaluaciones_triage");
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.PresionArterial).HasMaxLength(20);
-            entity.Property(e => e.JustificacionRegla).HasMaxLength(500);
-            entity.Property(e => e.ObservacionesClinicas).HasMaxLength(500);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.PacienteId).HasColumnName("paciente_id");
+            entity.Property(e => e.FechaRegistro).HasColumnName("fecha_registro");
+            entity.Property(e => e.Temperatura).HasColumnName("temperatura");
+            entity.Property(e => e.FrecuenciaCardiaca).HasColumnName("frecuencia_cardiaca");
+            entity.Property(e => e.PresionArterial).HasColumnName("presion_arterial").HasMaxLength(20);
+            entity.Property(e => e.SaturacionOxigeno).HasColumnName("saturacion_oxigeno");
+            entity.Property(e => e.DolorToracico).HasColumnName("dolor_toracico");
+            entity.Property(e => e.DificultadRespiratoria).HasColumnName("dificultad_respiratoria");
+            entity.Property(e => e.SintomasPrincipales).HasColumnName("sintomas_principales");
+            entity.Property(e => e.PrioridadAsignada).HasColumnName("prioridad_asignada");
+            entity.Property(e => e.ProtocoloAtencionId).HasColumnName("protocolo_atencion_id");
+            entity.Property(e => e.JustificacionRegla).HasColumnName("justificacion_regla").HasMaxLength(500);
+            entity.Property(e => e.RequiereAtencionInmediata).HasColumnName("requiere_atencion_inmediata");
+            entity.Property(e => e.ObservacionesClinicas).HasColumnName("observaciones_clinicas").HasMaxLength(500);
 
             entity.HasOne(e => e.Paciente)
                   .WithMany(p => p.Evaluaciones)

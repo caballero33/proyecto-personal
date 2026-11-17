@@ -25,7 +25,7 @@ public class PacientesController : ControllerBase
     }
 
     /// <summary>
-    /// Consulta todos los pacientes registrados en el sistema (Clase 6).
+
     /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<PacienteResponseDto>), StatusCodes.Status200OK)]

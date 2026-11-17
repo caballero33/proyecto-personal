@@ -83,3 +83,9 @@ INSERT INTO evaluaciones_triage (id, paciente_id, temperatura, frecuencia_cardia
 VALUES
 (1, 1, 37.0, 130, '140/90', 88, TRUE, TRUE, 'Dolor Torácico Opresivo, Disnea', 1, 1, 'REGLA-01: Dolor de pecho + Dificultad respiratoria con SpO2 crítica (<90%). Código Rojo.', TRUE, 'Paciente trasladado a sala de reanimación.')
 ON CONFLICT (id) DO NOTHING;
+
+-- Sincronización de secuencias SERIAL tras inserción de IDs explícitos
+SELECT setval(pg_get_serial_sequence('protocolos_atencion', 'id'), COALESCE((SELECT MAX(id) FROM protocolos_atencion), 1));
+SELECT setval(pg_get_serial_sequence('sintomas', 'id'), COALESCE((SELECT MAX(id) FROM sintomas), 1));
+SELECT setval(pg_get_serial_sequence('pacientes', 'id'), COALESCE((SELECT MAX(id) FROM pacientes), 1));
+SELECT setval(pg_get_serial_sequence('evaluaciones_triage', 'id'), COALESCE((SELECT MAX(id) FROM evaluaciones_triage), 1));

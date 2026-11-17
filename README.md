@@ -100,16 +100,18 @@ El proyecto aplica directamente cada una de las clases de la Unidad 1:
 
 ---
 
-## 4. Estructura de la Solución (Clean Architecture)
+## 4. Estructura de la Solución (Clean Architecture + Docker + Nginx)
 
 ```text
 TriageDoc/
+├── docker-compose.yml                    # Orquestación de los 3 Servicios (DB + API + React/Nginx)
 ├── infra/                                # Infraestructura Aislada (Clase 4)
-│   ├── docker-compose.yml                # Orquestación de PostgreSQL 16
-│   ├── init.sql                          # Inicialización de las 4 tablas y Seed Data
-│   ├── .env                              # Credenciales aisladas del contenedor
+│   ├── docker-compose.yml                # Orquestación equivalente desde /infra
+│   ├── init.sql                          # Inicialización de las 4 tablas, secuencias y Seed Data
+│   ├── .env                              # Credenciales aisladas del contenedor PostgreSQL
 │   └── .env.example
 ├── backend/
+│   ├── Dockerfile                        # Multi-stage build (.NET 8 SDK -> ASP.NET Runtime)
 │   ├── TriageDoc.Domain/                 # Capa de Dominio (Entidades Puras)
 │   │   └── Entities/
 │   │       ├── Paciente.cs
@@ -127,35 +129,61 @@ TriageDoc/
 │   │   │   └── Evaluaciones/ (DTOs y Validators)
 │   │   └── DependencyInjection.cs
 │   ├── TriageDoc.Infrastructure/         # Capa de Infraestructura (EF Core y Postgres)
-│   │   ├── Data/TriageDocDbContext.cs    # Mapeo relacional y HasData
+│   │   ├── Data/TriageDocDbContext.cs    # Mapeo relacional snake_case y HasData
 │   │   ├── Repositories/                 # Implementaciones de Repositorio
 │   │   └── DependencyInjection.cs
 │   └── TriageDoc.API/                    # Capa de Presentación (Controladores REST)
-│       ├── Controllers/                  # Pacientes, Sintomas, Protocolos, Evaluaciones
-│       ├── Program.cs                    # Configuración de Pipeline y Swagger
+│       ├── Controllers/                  # Pacientes, Sintomas, Protocolos, Evaluaciones, Triage
+│       ├── Program.cs                    # Configuración de Pipeline, EnsureCreated y Swagger
 │       ├── TriageDoc.API.http            # Suite de pruebas ágiles (Clase 7 y 9)
 │       ├── .env                          # Cadena de conexión inyectada
 │       └── appsettings.json
+├── frontend/                             # Cliente Web SPA (React 18 + Vite + Nginx)
+│   ├── Dockerfile                        # Multi-stage build (Node 22 Build -> Nginx Alpine)
+│   ├── nginx.conf                        # Reverse Proxy (/api) + Enrutamiento SPA (try_files)
+│   ├── package.json
+│   ├── vite.config.js
+│   └── src/
+│       ├── App.jsx                       # Layout Clínico (Barra Superior + Sidebar + Módulos)
+│       ├── styles.css                    # Colorimetría Clínica (Estilo BookMedik + MTS)
+│       ├── services/api.js               # Cliente HTTP hacia /api con respaldo local
+│       └── components/
+│           ├── MedicalDashboard.jsx      # Tabla y filtros de Evaluaciones Manchester
+│           ├── TriageEvaluationForm.jsx  # Formulario e Inferencia del Motor Experto
+│           ├── PacientesManager.jsx      # Directorio y CRUD de Pacientes + Historial
+│           ├── KnowledgeBaseManager.jsx  # Catálogo de Síntomas, Alarmas y Protocolos
+│           └── Icons.jsx                 # Iconografía SVG vectorial (sin emojis)
 └── README.md
 ```
 
 ---
 
-## 5. Puesta en Marcha
+## 5. Puesta en Marcha y Contenerización Completa (Docker + Nginx)
 
-### 1. Iniciar Base de Datos con Docker
-Desde la carpeta raíz del repositorio:
+### Opción A: Levantar los 3 Servicios con un solo comando (Recomendado - Tema 4)
+Desde la carpeta `TriageDoc/` (o desde `TriageDoc/infra/`):
 ```bash
-cd infra
-docker compose up -d
+docker compose up --build
 ```
+Esto levanta en la red privada virtual `triagedoc-network`:
+1. **`postgres-triagedoc`** (PostgreSQL 16 en puerto `5432`, inicializado con `init.sql`).
+2. **`api-triagedoc`** (Backend .NET 8 en puerto `5000` -> `http://localhost:5000/swagger`).
+3. **`web-triagedoc`** (Frontend React servido por Nginx en `http://localhost:8080` y `http://localhost:5173`, redirigiendo `/api/` internamente a `api-triagedoc:8080/api/`).
 
-### 2. Ejecutar la API (.NET)
-```bash
-cd ../backend/TriageDoc.API
-dotnet run
-```
-
-### 3. Probar los Endpoints
-- **Swagger UI:** `http://localhost:5000/swagger`
-- **REST Client:** Abrir el archivo `backend/TriageDoc.API/TriageDoc.API.http` en VS Code o Visual Studio y hacer clic en **"Send Request"** sobre cualquiera de las peticiones.
+### Opción B: Ejecución en Desarrollo Local
+1. **Base de Datos:**
+   ```bash
+   cd infra
+   docker compose up -d db-triagedoc
+   ```
+2. **Backend (.NET 8):**
+   ```bash
+   cd ../backend/TriageDoc.API
+   dotnet run
+   ```
+3. **Frontend (React + Vite):**
+   ```bash
+   cd ../../frontend
+   npm install
+   npm run dev
+   ```

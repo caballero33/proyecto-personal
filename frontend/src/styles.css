@@ -1,0 +1,713 @@
+:root {
+  /* Colorimetría Clínica estilo BookMedik */
+  --nav-bg: #222222;
+  --nav-bg-active: #080808;
+  --nav-border: #101010;
+  --nav-text: #9d9d9d;
+  --nav-text-hover: #ffffff;
+
+  --bg-page: #ffffff;
+  --bg-subtle: #f5f5f5;
+  --bg-addon: #eeeeee;
+  --border-color: #dddddd;
+  --border-input: #cccccc;
+
+  --text-main: #333333;
+  --text-muted: #777777;
+
+  /* Botones de Acción Clínica */
+  --btn-primary: #428bca;
+  --btn-primary-hover: #3071a9;
+  --btn-info: #5bc0de;
+  --btn-info-hover: #31b0d5;
+  --btn-warning: #f0ad4e;
+  --btn-warning-hover: #ec971f;
+  --btn-danger: #d9534f;
+  --btn-danger-hover: #c9302c;
+  --btn-success: #5cb85c;
+
+  /* Colores Oficiales Manchester Triage System (Adaptados a fondo blanco) */
+  --mts-rojo: #d9534f;
+  --mts-rojo-bg: #fdf2f2;
+  --mts-naranja: #f08a24;
+  --mts-naranja-bg: #fff8f0;
+  --mts-amarillo: #e6a800;
+  --mts-amarillo-bg: #fffdf0;
+  --mts-verde: #5cb85c;
+  --mts-verde-bg: #f3faf3;
+  --mts-azul: #428bca;
+  --mts-azul-bg: #f2f8fc;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-size: 14px;
+  line-height: 1.42857143;
+  min-height: 100vh;
+}
+
+/* Estructura Principal (Top Navbar + Sidebar Izquierdo + Contenido Blanco) */
+.bookmedik-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Barra Superior Oscura (#222222) */
+.bm-topbar {
+  height: 50px;
+  background-color: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  color: var(--nav-text);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.bm-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.bm-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.bm-version-badge {
+  background-color: var(--btn-info);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.bm-quick-link {
+  background: transparent;
+  border: none;
+  color: var(--nav-text);
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.bm-quick-link:hover {
+  color: var(--nav-text-hover);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.bm-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #e5e5e5;
+  background: #2f2f2f;
+  border: 1px solid #3d3d3d;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-dot.online {
+  background: var(--btn-success);
+}
+
+.status-dot.offline {
+  background: var(--btn-warning);
+}
+
+/* Cuerpo con Sidebar Izquierdo + Área de Trabajo Blanca */
+.bm-body {
+  display: flex;
+  flex: 1;
+}
+
+.bm-sidebar {
+  width: 225px;
+  background-color: var(--nav-bg);
+  min-height: calc(100vh - 50px);
+  padding-top: 10px;
+  flex-shrink: 0;
+}
+
+.bm-nav-list {
+  list-style: none;
+}
+
+.bm-nav-item {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--nav-text);
+  padding: 13px 18px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.bm-nav-item:hover {
+  background-color: #1a1a1a;
+  color: var(--nav-text-hover);
+}
+
+.bm-nav-item.active {
+  background-color: var(--nav-bg-active);
+  color: #ffffff;
+  border-left-color: var(--btn-info);
+}
+
+/* Área de Contenido Principal Blanca */
+.bm-content {
+  flex: 1;
+  background-color: var(--bg-page);
+  padding: 25px 30px 45px;
+  overflow-x: hidden;
+}
+
+@media (max-width: 860px) {
+  .bm-body {
+    flex-direction: column;
+  }
+  .bm-sidebar {
+    width: 100%;
+    min-height: auto;
+    padding-top: 0;
+  }
+  .bm-nav-list {
+    display: flex;
+    overflow-x: auto;
+  }
+  .bm-nav-item {
+    white-space: nowrap;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+  }
+  .bm-nav-item.active {
+    border-bottom-color: var(--btn-info);
+  }
+}
+
+/* Cabecera de Página (Estilo "Citas" en BookMedik) */
+.page-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eeeeee;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+.page-title-bar h1 {
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text-main);
+}
+
+/* Barra de Filtros con Input Groups estilo Bootstrap / BookMedik */
+.filter-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.input-group {
+  display: flex;
+  width: 100%;
+}
+
+.input-group-addon {
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #555555;
+  text-align: center;
+  background-color: var(--bg-addon);
+  border: 1px solid var(--border-input);
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-group .form-input,
+.input-group .form-select {
+  border-radius: 0 4px 4px 0;
+  flex: 1;
+}
+
+/* Tarjetas de Resumen por Nivel de Prioridad Manchester */
+.mts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.mts-card {
+  border-radius: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.12s ease;
+  background: #ffffff;
+}
+
+.mts-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.mts-card.active-filter {
+  box-shadow: 0 0 0 2px var(--btn-primary);
+}
+
+.mts-card.color-Rojo {
+  background: var(--mts-rojo-bg);
+  border-left: 5px solid var(--mts-rojo);
+}
+.mts-card.color-Naranja {
+  background: var(--mts-naranja-bg);
+  border-left: 5px solid var(--mts-naranja);
+}
+.mts-card.color-Amarillo {
+  background: var(--mts-amarillo-bg);
+  border-left: 5px solid var(--mts-amarillo);
+}
+.mts-card.color-Verde {
+  background: var(--mts-verde-bg);
+  border-left: 5px solid var(--mts-verde);
+}
+.mts-card.color-Azul {
+  background: var(--mts-azul-bg);
+  border-left: 5px solid var(--mts-azul);
+}
+
+.mts-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.mts-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-main);
+}
+
+.mts-count {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.mts-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Paneles y Contenedores */
+.panel {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.panel-header h2 {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.two-col-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 960px) {
+  .two-col-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Badges Manchester */
+.badge-mts {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-Rojo {
+  background: var(--mts-rojo);
+  color: #ffffff;
+}
+.badge-Naranja {
+  background: var(--mts-naranja);
+  color: #ffffff;
+}
+.badge-Amarillo {
+  background: var(--mts-amarillo);
+  color: #ffffff;
+}
+.badge-Verde {
+  background: var(--mts-verde);
+  color: #ffffff;
+}
+.badge-Azul {
+  background: var(--mts-azul);
+  color: #ffffff;
+}
+
+/* Tarjetas de Detalle / Veredicto */
+.eval-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.eval-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.eval-card.border-Rojo {
+  border-left: 5px solid var(--mts-rojo);
+}
+.eval-card.border-Naranja {
+  border-left: 5px solid var(--mts-naranja);
+}
+.eval-card.border-Amarillo {
+  border-left: 5px solid var(--mts-amarillo);
+}
+.eval-card.border-Verde {
+  border-left: 5px solid var(--mts-verde);
+}
+.eval-card.border-Azul {
+  border-left: 5px solid var(--mts-azul);
+}
+
+.eval-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.patient-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.vitals-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.vital-chip {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  padding: 3px 9px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #444444;
+}
+
+.vital-chip.alert {
+  background: #fdf2f2;
+  border-color: var(--mts-rojo);
+  color: #b92c28;
+}
+
+.rule-box {
+  background: #f8fafd;
+  border: 1px solid #d0e3f0;
+  border-left: 4px solid var(--btn-primary);
+  border-radius: 3px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: #2c3e50;
+}
+
+/* Formularios e Inputs estilo Bootstrap 3 / BookMedik */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  background: #ffffff;
+  border: 1px solid var(--border-input);
+  color: #555555;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #66afe9;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px rgba(102, 175, 233, 0.6);
+}
+
+.checkbox-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 8px 0 14px;
+}
+
+.alarm-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border-input);
+  background: var(--bg-subtle);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.alarm-toggle.checked {
+  border-color: var(--mts-rojo);
+  background: #fdf2f2;
+  color: #a94442;
+}
+
+/* Botones de Acción (Azul Buscar, Naranja Editar, Rojo Eliminar, Blanco Secundario) */
+.btn {
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.btn-primary {
+  background-color: var(--btn-primary);
+  border-color: #357ebd;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: var(--btn-primary-hover);
+}
+
+.btn-secondary,
+.btn-default {
+  background-color: #ffffff;
+  border-color: var(--border-input);
+  color: var(--text-main);
+}
+
+.btn-secondary:hover,
+.btn-default:hover {
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+
+.btn-warning {
+  background-color: var(--btn-warning);
+  border-color: #eea236;
+  color: #ffffff;
+}
+
+.btn-warning:hover {
+  background-color: var(--btn-warning-hover);
+}
+
+.btn-danger {
+  background-color: var(--btn-danger);
+  border-color: #d43f3a;
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background-color: var(--btn-danger-hover);
+}
+
+.btn-sm {
+  padding: 4px 9px;
+  font-size: 12px;
+  border-radius: 3px;
+}
+
+/* Tablas con Bordes Clínicos Limpios (Estilo BookMedik) */
+.table-wrap {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border-color);
+  font-size: 13.5px;
+  background-color: #ffffff;
+}
+
+.data-table th,
+.data-table td {
+  padding: 9px 12px;
+  text-align: left;
+  border: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.data-table th {
+  color: var(--text-main);
+  font-weight: 700;
+  background-color: #ffffff;
+  border-bottom-width: 2px;
+}
+
+.data-table tr:hover td {
+  background-color: #f9f9f9;
+}
+
+.alert-banner {
+  padding: 10px 14px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alert-banner.error {
+  background-color: #f2dede;
+  border: 1px solid #ebccd1;
+  color: #a94442;
+}
+
+.alert-banner.success {
+  background-color: #dff0d8;
+  border: 1px solid #d6e9c6;
+  color: #3c763d;
+}
+
+.symptom-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.symptom-tag {
+  font-size: 12px;
+  padding: 3px 9px;
+  border-radius: 3px;
+  border: 1px solid var(--border-input);
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.symptom-tag:hover {
+  border-color: var(--btn-primary);
+  color: var(--btn-primary);
+  background: #ffffff;
+}
+
+.symptom-tag.red-flag {
+  border-color: #ebccd1;
+  background: #fdf2f2;
+  color: #a94442;
+}
